@@ -1,29 +1,20 @@
-/* ============================================================
-   CALLISTO FORMATION — CSS ADDITIONNEL
-   Styles spécifiques à l'instance (hors theme_callisto/post.scss)
-
-   Supprimés de cette version :
-   - Styles .pagelayout-course #page-header  → post.scss
-   - Classes .animate et keyframes           → post.scss / animations.js AMD
-   - #page-local-explore-index               → plugin remplacé par local_catalogue
-   - Styles #contentcustomfooter BoostPlus   → bloc BoostPlus supprimé
-   - Sélecteurs .eno_* et .enocardbox        → classes Enovation inexistantes
-   - body[class*="cmid-"] .eno_backtocourse  → classe Enovation inexistante
-   ============================================================ */
+/****************************************************************
+ * EXTENSION POINT:
+ * Add your SCSS code here.
+ * It will be added on top of Boost Union's SCSS code.
+ ***************************************************************/
 
 /* ============================================================
-   0. PAGE ACCUEIL
+   CALLISTO FORMATION — POST.SCSS UNIFIÉ
+   Fusion : theme_callisto/scss/post.scss + CSS additionnel admin
+   Dernière mise à jour : juin 2026
+
+   Ce fichier centralise tout le CSS custom de l'instance.
+   Les champs "SCSS brut" / "JS additionnel" de Boost Union et le
+   HTML supplémentaire Moodle ne doivent plus contenir que des
+   tests ponctuels, pas de code définitif.
    ============================================================ */
 
-/* Pages d'accueil partenaires - page de catégorie épurée */
-.pagelayout-coursecategory #page-navbar,
-.pagelayout-coursecategory #page-header .h2,
-.pagelayout-coursecategory .secondary-navigation,
-.pagelayout-coursecategory #action_bar,
-.pagelayout-coursecategory .theme_boost_union-catlisting,
-.pagelayout-coursecategory .course_category_tree.clearfix {
-    display: none;
-}
 
 /* ============================================================
    1. TYPOGRAPHIE & MISE EN PAGE GLOBALE
@@ -31,6 +22,10 @@
 
 html {
     scroll-behavior: smooth;
+}
+
+body {
+    font-size: 1rem;
 }
 
 body,
@@ -154,6 +149,13 @@ mark {
     padding: 0.1em 0.2em;
 }
 
+/* Supprimer le padding latéral du contenu pour aligner avec les titres */
+#page-content,
+#page .main-inner {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
 
 /* ============================================================
    2. NAVIGATION & HEADER
@@ -221,6 +223,12 @@ li[data-key="siteadminnode"] .nav-link::before {
     margin-right: 6px;
 }
 
+/* FIX : scroll horizontal de 8px sur les pages de cours */
+.secondary-navigation {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
 
 /* ============================================================
    3. AUTHENTIFICATION
@@ -233,59 +241,122 @@ li[data-key="siteadminnode"] .nav-link::before {
 
 
 /* ============================================================
-   4. PAGES DE COURS
+   4. PAGE D'ACCUEIL
    ============================================================ */
 
-/* Couleur par défaut quand l'image de cours n'est pas récupérée + diminution hauteur */
-.pagelayout-course #page-header,
-.pagelayout-incourse #page-header {
-    background-color: var(--primary, $color-text);
-    min-height: 150px;
+/* Masquer le titre et le menu secondaire sur la page d'accueil */
+.pagelayout-frontpage #page-header h1,
+.pagelayout-frontpage .secondary-navigation {
+    display: none;
+    margin: 0;
+    padding: 0;
 }
 
-/* Image en arrière-plan, quelle que soit sa position dans le DOM */
-.pagelayout-course #courseheaderimage,
-.pagelayout-incourse #courseheaderimage {
-    z-index: 0;
-}
-
-/* Tout le reste du header passe au-dessus */
-.pagelayout-course #page-header>.w-100>*:not(#courseheaderimage),
-.pagelayout-incourse #page-header>.w-100>*:not(#courseheaderimage) {
-    position: relative;
-    z-index: 2;
-}
-
-/* Contraste du titre sur l'image */
-.pagelayout-course #page-header h1,
-.pagelayout-incourse #page-header h1 {
-    color: #ffffff;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
-}
-
-
-/* Masquer le fil d'ariane dans le header de cours */
-.pagelayout-course #page-navbar,
-.pagelayout-incourse #page-navbar {
+/* Masquer le message de bienvenue automatique */
+.pagelayout-frontpage #page-header .h2 {
     display: none;
 }
 
+/* Suppression cadre et espace vide */
+.pagelayout-frontpage .section-item {
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.pagelayout-frontpage #topofscroll.main-inner {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+
+/* ============================================================
+   5. PAGES D'ACCUEIL PARTENAIRES (pages de catégorie épurées)
+   ============================================================ */
+
+.pagelayout-coursecategory #page-navbar,
+.pagelayout-coursecategory #page-header .h2,
+.pagelayout-coursecategory .secondary-navigation,
+.pagelayout-coursecategory #action_bar,
+.pagelayout-coursecategory .theme_boost_union-catlisting,
+.pagelayout-coursecategory .course_category_tree.clearfix {
+    display: none;
+}
+
+.pagelayout-coursecategory .theme_boost_union-coursecategoryinfo {
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+}
+
+.pagelayout-coursecategory #topofscroll.main-inner {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+
+/* ============================================================
+   6. PAGES DE COURS
+   ============================================================ */
+
+/* --- Header de cours : image, overlay, titre, fil d'ariane --- */
+
+/* Couleur de secours quand il n'y a pas d'image de cours
+   (ex. format activité unique, qui ne génère pas #courseheaderimage) */
 .pagelayout-course #page-header,
 .pagelayout-incourse #page-header {
     position: relative;
     min-height: 320px;
     padding-top: 0;
     margin-top: 61px;
+    /* hauteur de la navbar fixe — à ajuster si la navbar change */
     overflow: hidden;
+    background-color: var(--primary, $color-text);
 }
 
-/* Titre — centré, au-dessus de l'overlay */
+/* Image en arrière-plan, quelle que soit sa position dans le DOM */
+.pagelayout-course #courseheaderimage,
+.pagelayout-incourse #courseheaderimage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+}
+
+.pagelayout-course #courseheaderimage::after,
+.pagelayout-incourse #courseheaderimage::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+/* Tout le contenu du header passe au-dessus de l'image/overlay */
+.pagelayout-course #page-header>.w-100>*:not(#courseheaderimage),
+.pagelayout-incourse #page-header>.w-100>*:not(#courseheaderimage) {
+    position: relative;
+    z-index: 2;
+}
+
 .pagelayout-course #courseheaderimage>div,
 .pagelayout-incourse #courseheaderimage>div {
     position: relative;
     z-index: 2;
 }
 
+/* Titre — centré, contrasté sur l'image */
+.pagelayout-course #page-header h1,
+.pagelayout-incourse #page-header h1,
 .pagelayout-course #courseheaderimage h1,
 .pagelayout-incourse #courseheaderimage h1 {
     color: #ffffff;
@@ -293,13 +364,20 @@ li[data-key="siteadminnode"] .nav-link::before {
     margin: 0;
 }
 
+/* Fil d'Ariane masqué dans le header de cours
+   (structure Boost Union incompatible avec l'affichage initialement prévu —
+   le fil d'ariane reste disponible via la navigation secondaire) */
+.pagelayout-course #page-navbar,
+.pagelayout-incourse #page-navbar {
+    display: none;
+}
 
-
-/****/
 /* Visibilité actions header page cours */
 #page-header .header-actions-container {
     background-color: white;
 }
+
+/* --- Reste du contenu de cours --- */
 
 /* Correction footer tableau notes */
 .path-grade-report-grader.hasstickyfooter .gradeparent tr.lastrow {
@@ -427,15 +505,6 @@ a.glossary.autolink.concept::after {
     max-height: calc(100vh - 3.5rem);
     padding: 2rem;
 }
-
-/* Pages catégorie — masquer l'action bar
-#page-course-index-category .cat-icon i {
-    display: none;
-}
-
-#page-course-index-category #action_bar {
-    display: none;
-} */
 
 /* Sections restreintes */
 .course-section:has(.availabilityinfo.isrestricted) .section-item {
@@ -630,10 +699,9 @@ a.glossary.autolink.concept::after {
 
 
 /* ============================================================
-   5. CHAMPS PERSONNALISÉS DE COURS
+   7. CHAMPS PERSONNALISÉS DE COURS
    ============================================================ */
 
-/* Icônes des champs personnalisés */
 .customfield_author::before {
     content: "\f4d7";
     font-family: 'bootstrap-icons';
@@ -823,34 +891,27 @@ a.glossary.autolink.concept::after {
 
 
 /* ============================================================
-   6. COMPOSANTS UI
+   8. COMPOSANTS UI
    ============================================================ */
 
-/** Effet de zoom sur image avec ombre personnalisée utilisant drop-shadow **/
+/* Effet de zoom au survol (icônes, images) */
 .zoom {
     overflow: hidden;
     transition: transform 0.1s ease-out, filter 0.1s ease-out;
-    /* Ajout de la transition pour le zoom et l'ombre */
 }
 
 .zoom:hover {
-    -webkit-transform: scale(1.2);
-    -ms-transform: scale(1.2);
     transform: scale(1.2);
     filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
-    /* Ajustez les valeurs de l'ombre au survol */
     transition: transform 0.1s ease-in, filter 0.1s ease-in;
-    /* Transitions différentes pour l'entrée et la sortie */
 }
 
 .zoom:active {
     text-decoration: none;
 }
 
-/*** effet shrink sur image ou autre ***/
+/* Effet shrink au survol */
 .shrink:hover {
-    -webkit-transform: scale(0.8);
-    -ms-transform: scale(0.8);
     transform: scale(0.8);
     transition: transform 0.3s ease-in, transform 0.3s ease-out;
 }
@@ -859,27 +920,24 @@ a.glossary.autolink.concept::after {
     text-decoration: none;
 }
 
-/*** Zoom sur image au clic ***/
+/* Zoom au clic (via toggleZoomImage() en JS) */
 .img-zoom {
     transition: transform 0.3s ease-in-out;
 }
 
 .zoomed {
     transform: scale(1.5);
-    /* Ajustez la valeur selon vos besoins */
     width: 100%;
 }
 
-
-/*** effet image interactive ***/
+/* Image interactive — bordure au survol */
 .interactive-image {
     transition: border 0.2s ease-in-out;
     border: 6px solid transparent;
-    /* Bordure par défaut (transparente) */
 }
 
 .interactive-image:hover {
-    border-color: #090C9B;
+    border-color: var(--primary, #090C9B);
 }
 
 /* Boutons — effet outline au survol */
@@ -1292,8 +1350,6 @@ a:hover .pf-card-img {
     transform: scale(1.04);
 }
 
-
-
 /* Liste en poupée russe */
 .embed-user-role {
     padding: 20px;
@@ -1368,6 +1424,85 @@ a:hover .pf-card-img {
     background: #fef9f5;
 }
 
+/* Animations au scroll (déclenchées par animations.js) */
+.animate {
+    opacity: 0;
+    transition: all 0.7s ease;
+    transition-delay: 0.25s;
+}
+
+.animate[data-animation="fade-up"] {
+    transform: translateY(20px);
+}
+
+.animate[data-animation="fade-up"].visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.animate[data-animation="fade-down"] {
+    transform: translateY(-20px);
+}
+
+.animate[data-animation="fade-down"].visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.animate[data-animation="fade-left"] {
+    transform: translateX(-20px);
+}
+
+.animate[data-animation="fade-left"].visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.animate[data-animation="fade-right"] {
+    transform: translateX(20px);
+}
+
+.animate[data-animation="fade-right"].visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.animate[data-animation="rotate"] {
+    transform: rotate(-10deg);
+}
+
+.animate[data-animation="rotate"].visible {
+    opacity: 1;
+    transform: rotate(0deg);
+}
+
+.animate[data-animation="scale"] {
+    transform: scale(0.5);
+}
+
+.animate[data-animation="scale"].visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.animate[data-animation="flip"] {
+    transform: perspective(400px) rotateY(90deg);
+}
+
+.animate[data-animation="flip"].visible {
+    opacity: 1;
+    transform: perspective(400px) rotateY(0deg);
+}
+
+.animate[data-animation="zoom-in"] {
+    transform: scale(0.95);
+}
+
+.animate[data-animation="zoom-in"].visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
 /* Animation info slide (bandeau quotidien) */
 .info-slide {
     transition: transform 0.3s ease-in-out;
@@ -1414,7 +1549,7 @@ a:hover .pf-card-img {
 
 
 /* ============================================================
-   7. ACCESSIBILITÉ
+   9. ACCESSIBILITÉ
    ============================================================ */
 
 /* Masquer les tooltips Bootstrap (bruit pour les AT) */
@@ -1445,16 +1580,19 @@ a:visited:not(.btn):not(img):not(button):not([type="button"]):not(.nav-link):not
     text-decoration: underline;
 }
 
-/* Icône lien externe (Bootstrap Icons) */
-a[target="_blank"].no-image::after {
+/* Icône lien externe — solution CSS pure (sans dépendance JS),
+   via :has() pour exclure les liens contenant une image */
+a[target="_blank"]:not(:has(img))::after {
+    content: "";
     display: inline-block;
-    font-family: 'bootstrap-icons';
-    content: '\00a0\F143';
+    width: 0.85em;
+    height: 0.85em;
+    margin-left: 0.3em;
     vertical-align: middle;
-}
-
-a[target="_blank"].no-image img {
-    display: none;
+    background-color: currentColor;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z'/%3E%3C/svg%3E");
+    mask-repeat: no-repeat;
+    mask-size: contain;
 }
 
 /* Focus sur les images-liens */
@@ -1568,7 +1706,7 @@ body.h5p-embed .eupopup-markup {
 
 
 /* ============================================================
-   8. TABLEAU DE BORD
+   10. TABLEAU DE BORD
    ============================================================ */
 
 #page-my-index #page {
@@ -1579,7 +1717,6 @@ body.h5p-embed .eupopup-markup {
     border: none;
 }
 
-/* Notes */
 .grade-item {
     margin-bottom: 0.5rem;
     padding: 0.25rem 0;
@@ -1595,7 +1732,6 @@ body.h5p-embed .eupopup-markup {
     margin-left: auto;
 }
 
-/* Activités récentes */
 #custom-recent-items a {
     text-decoration: none;
 }
@@ -1604,7 +1740,6 @@ body.h5p-embed .eupopup-markup {
     text-decoration: underline;
 }
 
-/* Badges */
 #custom-badges-container {
     max-width: 100%;
 }
@@ -1635,7 +1770,6 @@ body.h5p-embed .eupopup-markup {
     text-decoration: none;
 }
 
-/* Mes cours (tableau de bord) */
 #dashboard-my-courses-list {
     list-style-type: none;
     padding-left: 0;
@@ -1666,8 +1800,60 @@ body.h5p-embed .eupopup-markup {
 
 
 /* ============================================================
-   9. FOOTER
+   11. FOOTER
    ============================================================ */
+
+/* Footer pleine largeur */
+#page.drawers,
+#page {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Restaurer le padding du contenu principal */
+#page-content,
+#page .main-inner {
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+/* Supprimer le margin sous le footer */
+body.backgroundimage #footnote,
+body.loginbackgroundimage #footnote {
+    margin-bottom: 0;
+}
+
+/* Masquer le rectangle blanc du footer natif Boost Union */
+#page-footer.footer-popover {
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+
+/* Styler le vrai footer Callisto */
+body #footnote,
+body.backgroundimage #footnote,
+body.loginbackgroundimage #footnote {
+    width: 100%;
+    background-color: $color-text !important;
+    color: #ffffff;
+    padding: 2rem 3rem !important;
+    margin-bottom: 0 !important;
+    border-radius: 0 !important;
+}
+
+body #footnote a,
+body.backgroundimage #footnote a,
+body.loginbackgroundimage #footnote a {
+    color: #B7C0EE;
+}
+
+/* Supprimer le scroll horizontal */
+@media (min-width: 768px) {
+    body:not(.backgroundimage):not(.loginbackgroundimage) #footnote {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
 
 .hr-footer {
     border-top: 2px solid #bbb;
@@ -1677,7 +1863,7 @@ body.h5p-embed .eupopup-markup {
 
 
 /* ============================================================
-   10. CLASSES UTILITAIRES CUSTOM
+   12. CLASSES UTILITAIRES CUSTOM
    ============================================================ */
 
 /* Titres Urfist Cerise */
@@ -1748,14 +1934,40 @@ body.h5p-embed .eupopup-markup {
     margin-bottom: 20px;
 }
 
-
 /* Largeur select stats */
 .custom-select {
     width: 150px;
 }
 
+
 /* ============================================================
-   11. RESPONSIVE
+   13. CATALOGUE (local_catalogue)
+   ============================================================ */
+
+#local-catalogue .catalogue-filterbar {
+    position: sticky;
+    top: 56px;
+    /* hauteur de la navbar */
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid #dee2e6;
+    padding: 0.5rem 0;
+}
+
+#local-catalogue .dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 101;
+}
+
+/* Masquer temporairement le tri "Plus vus" (perf. à optimiser — cf. tâche planifiée à venir) */
+.form-check:has(input[value="popular"]) {
+    display: none;
+}
+
+
+/* ============================================================
+   14. RESPONSIVE
    ============================================================ */
 
 @media (min-width: 768px) {
@@ -1921,13 +2133,4 @@ body.h5p-embed .eupopup-markup {
     .nav-breadcrumb .breadcrumb a {
         color: #f8f9fa;
     }
-}
-
-
-/* ============================================================
-   12. CATALOGUE
-   ============================================================ */
-
-.form-check:has(input[value="popular"]) {
-    display: none;
 }
