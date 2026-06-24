@@ -149,12 +149,6 @@ mark {
     padding: 0.1em 0.2em;
 }
 
-/* Supprimer le padding latéral du contenu pour aligner avec les titres */
-#page-content,
-#page .main-inner {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
 
 
 /* ============================================================
@@ -1795,12 +1789,6 @@ body.h5p-embed .eupopup-markup {
     padding-right: 0;
 }
 
-/* Restaurer le padding du contenu principal */
-#page-content,
-#page .main-inner {
-    padding-left: 3rem;
-    padding-right: 3rem;
-}
 
 /* Supprimer le margin sous le footer */
 body.backgroundimage #footnote,
