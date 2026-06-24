@@ -150,7 +150,8 @@ mark {
 }
 
 /* Modif marges page CGU mentions légales */
-body#page-admin-tool-policy-view #page-content.row {
+body#page-admin-tool-policy-view #page-content.row,
+body#page-admin-tool-policy-view #page-header.row {
     margin-left: 0;
     margin-right: 0;
     padding-left: 15px;
