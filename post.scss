@@ -1157,6 +1157,26 @@ details[open] summary {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
 }
 
+/* Cards - grid et bg img full width */
+.card-deck.mr-0 {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.card-deck.mr-0 .card {
+    min-width: unset !important;
+    max-width: unset !important;
+    flex: unset !important;
+    margin: 0.5rem !important;
+}
+
+.card-deck.mr-0 .card .card-img-top {
+    max-width: unset !important;
+    width: 100% !important;
+}
+
 /* Video YouTube responsive */
 .video-responsive-youtube {
     overflow: hidden;
